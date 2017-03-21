@@ -21,7 +21,12 @@ final class JWS implements JWSInterface
 {
     use JWT;
 
-    private $is_payload_detached;
+    private $is_payload_detached = false;
+
+    /**
+     * @var string|null
+     */
+    private $encoded_payload = null;
 
     /**
      * @var \Jose\Object\SignatureInterface[]
@@ -59,14 +64,28 @@ final class JWS implements JWSInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function withEncodedPayload($encoded_payload)
+    {
+        $jwt = clone $this;
+        $jwt->encoded_payload = $encoded_payload;
+
+        return $jwt;
+    }
+
+    /**
      * @param \Jose\Object\SignatureInterface $signature
      *
      * @return string|null
      */
-    private function getEncodedPayload(SignatureInterface $signature)
+    public function getEncodedPayload(SignatureInterface $signature)
     {
         if (true === $this->isPayloadDetached()) {
             return;
+        }
+        if (null !== $this->encoded_payload) {
+            return $this->encoded_payload;
         }
         $payload = $this->getPayload();
         if (!is_string($payload)) {

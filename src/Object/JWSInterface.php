@@ -29,6 +29,21 @@ interface JWSInterface extends JWTInterface
     public function withAttachedPayload();
 
     /**
+     * @return \Jose\Object\JWSInterface
+     * @param mixed $encoded_payload
+     */
+    public function withEncodedPayload($encoded_payload);
+
+    /**
+     * @param \Jose\Object\SignatureInterface $signature
+     *
+     * @internal
+     *
+     * @return string|null
+     */
+    public function getEncodedPayload(SignatureInterface $signature);
+
+    /**
      * Returns the number of signature associated with the JWS.
      *
      * @return int
